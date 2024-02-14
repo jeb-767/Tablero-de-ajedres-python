@@ -5,9 +5,9 @@ import copy
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
      ["", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "", "", "", "", "", "", ""],  # 6
-     ["Wp", "", "", "", "", "", "", ""],  # 5
+     ["", "", "", "", "", "", "", ""],  # 5
      ["Bp", "", "", "", "", "", "", ""],  # 4
-     ["", "", "", "", "", "", "", ""],  # 3
+     ["", "", "", "Wp", "", "", "", ""],  # 3
      ["", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
      ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
@@ -20,7 +20,7 @@ x = ""
 movimiento_n = 0
 letra = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6, "H": 7}
 numeros = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1, 8: 0}
-control = [0, 0, 0, 0, 0, 0] #1: WK , BK , WR1 , WR2, BR1 ,BR2
+control = [0, 0, 0, 0, 0, 0]  # 1: WK , BK , WR1 , WR2, BR1 ,BR2
 blancas = True
 
 
@@ -101,15 +101,17 @@ def torre(pi, pf):
     if pi[0] == pf[0]:
         print("2")
         posicionfinal = pf
-        print(pi[1] , pf[1] - 1)
-        for F in range(pi[1] , pf[1] - 1):
+        print(pi[1], pf[1] + 1)
+        print(pf[1]+1)
+        for F in range(pi[1], pf[1], -1):
             print(F)
             A = m[F][pf[0]]
+            print(F , pf[0])
             print(A)
             if A == "":
                 print("XD")
                 a = 0
-                
+
             elif A == x:
                 print("GH")
                 a = 0
@@ -145,20 +147,18 @@ def torre(pi, pf):
         print("El movimiento no es legal")
         return
     if a == 1:
-        if y == "" or y[0] == x[0]:
+        print("El movimiento no es legal")
+        return
+    else:
+        print("JFGF")
+        if y == "" or y[0] != x[0]:
             print("El movimiento es legal")
             mover(pi, posicionfinal)
-            
+
         else:
             print("El movimiento no es legal")
-            return
-    else:
-        if y == "" or y[0] == x[0]:
-            print("El movimiento es legal")
-            mover(pi, posicionfinal)
-            
-        else:
-             print("El movimiento no es legal")
+
+
 def movimiento_legal(pi, pf):
     if x[1] == "r":
         torre(pi, pf)
