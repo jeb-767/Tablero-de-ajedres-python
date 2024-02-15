@@ -3,12 +3,12 @@ import copy
 
 #   a   b    c    d    e    f    g    h
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
-     ["", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
+     ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "", "", "", "", "", "", ""],  # 6
      ["", "", "", "", "", "", "", ""],  # 5
-     ["Bp", "", "", "", "", "", "", ""],  # 4
-     ["", "", "", "Wp", "", "", "", ""],  # 3
-     ["", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
+     ["", "", "", "", "", "", "", ""],  # 4
+     ["", "", "", "", "", "", "", ""],  # 3
+     ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
      ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
@@ -96,53 +96,35 @@ def enroque(x):
 
 def torre(pi, pf):
     a = 0
-    h = ""
-    print(x)
     if pi[0] == pf[0]:
-        print("2")
-        posicionfinal = pf
-        print(pi[1], pf[1] + 1)
-        print(pf[1]+1)
-        for F in range(pi[1], pf[1], -1):
-            print(F)
-            A = m[F][pf[0]]
-            print(F , pf[0])
-            print(A)
+        if pi[0] < pf[0]:
+            numero = -1
+        else:
+            numero = 1
+        for F in range(pi[1], pf[1], numero):
+            A = m[F][pi[0]]
             if A == "":
-                print("XD")
                 a = 0
-
             elif A == x:
-                print("GH")
                 a = 0
             else:
-                print("Joder")
                 a = 1
                 break
-        print(a)
-
     elif pi[1] == pf[1]:
-        print("1")
-        for F in range(pi[1], pf[1]):
-            A = m[pf[1]][7 - F]
+        if pi[0] < pf[0]:
+            numero = 1
+        else:
+            numero = -1
+        for F in range(pi[0], pf[0], numero):
+            A = m[pf[1]][F]
             if A == "":
-                print("XD1")
                 a = 0
-                posicionfinal = pf
-            elif A[0] == x[0]:
-                print("GH1")
-                if A == x:
-                    a = 0
-                    posicionfinal = pf
-                else:
-                    a = 1
-                    break
-            elif A[0] != x[0]:
-                print("AJ1")
+            elif A == x:
                 a = 0
-                posicionfinal = [pf[0], 7 - F]
-                print(pf)
+            else:
+                a = 1
                 break
+
     elif pi[0] != pi[0] or pi[1] != pf[1]:
         print("El movimiento no es legal")
         return
@@ -153,8 +135,7 @@ def torre(pi, pf):
         print("JFGF")
         if y == "" or y[0] != x[0]:
             print("El movimiento es legal")
-            mover(pi, posicionfinal)
-
+            mover(pi, pf)
         else:
             print("El movimiento no es legal")
 
@@ -173,12 +154,9 @@ def canviarnumeros(X, Y):
     Y[1] = numeros[int(Y[1])]
 
     return (X, Y)
-
-
 def mostrarestado(estado):
     for i in estado:
         print(i)
-
 
 def mover(pi, pf):
     if movimiento_n % 2 == 0:
