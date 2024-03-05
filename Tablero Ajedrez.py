@@ -4,11 +4,11 @@ import copy
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
      ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "", "", "", "", "", "", ""],  # 6
-     ["", "", "", "", "", "Wq", "", ""],  # 5
+     ["", "", "", "", "", "", "", ""],  # 5
      ["", "", "", "", "", "", "", ""],  # 4
-     ["", "Wn", "", "", "", "", "", ""],  # 3
-     ["Wp", "Wp", "", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
-     ["Wr1", "", "Wb", "Wp", "Wk", "Wb", "Wn", "Wr2"]]  # 1
+     ["", "", "", "", "", "", "", ""],  # 3
+     ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
+     ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
 estados.append(copy.deepcopy(m))
@@ -144,7 +144,6 @@ def alfil(pi,pf):
         else:
             contador2 = 1
         for a in range(pi[0] , pf[0], contador):
-            print(a , fila)
             A = m[fila][a]
             if A == "":
                 legal = True
@@ -153,7 +152,6 @@ def alfil(pi,pf):
             else:
                 legal = False
                 break
-            print(A)
             fila += contador2
         if legal == False:
             print("El movimiento no es legal")
