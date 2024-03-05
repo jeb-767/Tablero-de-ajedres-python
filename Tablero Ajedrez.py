@@ -6,9 +6,9 @@ m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
      ["", "", "", "", "", "", "", ""],  # 6
      ["", "", "", "", "", "", "", ""],  # 5
      ["", "", "", "", "", "", "", ""],  # 4
-     ["", "", "", "", "", "", "", ""],  # 3
+     ["", "Wb", "", "", "", "", "", ""],  # 3
      ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
-     ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
+     ["Wr1", "Wn", "", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
 estados.append(copy.deepcopy(m))
@@ -89,13 +89,9 @@ def torre(pi, pf ):
             numero = -1
         else:
             numero = 1
-        for F in range(pi[1], pf[1], numero):
-            A = m[F][pi[0]]
-            if A == "":
-                legal = True
-            elif A == x:
-                legal = True
-            else:
+        for a in range(pi[1], pf[1], numero):
+            A = m[a][pi[0]]
+            if A != "" and A != x:
                 legal = False
                 break
     elif pi[1] == pf[1]:
@@ -105,11 +101,7 @@ def torre(pi, pf ):
             numero = -1
         for F in range(pi[0], pf[0], numero):
             A = m[pf[1]][F]
-            if A == "":
-                legal = True
-            elif A == x:
-                legal = True
-            else:
+            if A != "" and A != x:
                 legal = False
                 break
     elif pi[0] != pi[0] or pi[1] != pf[1]:
@@ -145,11 +137,7 @@ def alfil(pi,pf):
             contador2 = 1
         for a in range(pi[0] , pf[0], contador):
             A = m[fila][a]
-            if A == "":
-                legal = True
-            elif A == x:
-                legal = True
-            else:
+            if A != "" and A != x:
                 legal = False
                 break
             fila += contador2
@@ -172,7 +160,7 @@ def alfil(pi,pf):
 def movimiento_legal(pi, pf):
     if x[1] == "r":
         return torre(pi, pf )
-    elif x[1] == "n":
+    elif x[1] == "b":
         return alfil(pi , pf)
     else:
         return mover(pi, pf)
