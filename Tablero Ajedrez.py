@@ -4,11 +4,11 @@ import copy
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
      ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "", "", "", "", "", "", ""],  # 6
-     ["", "", "", "", "", "", "", ""],  # 5
+     ["Wp", "", "", "", "", "", "", ""],  # 5
      ["", "", "", "", "", "", "", ""],  # 4
-     ["", "Wb", "", "", "", "", "", ""],  # 3
-     ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
-     ["Wr1", "Wn", "", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
+     ["", "Wb", "", "Wq", "", "", "", ""],  # 3
+     ["", "Wp", "Wp", "", "Wp", "Wp", "Wp", "Wp"],  # 2
+     ["Wr1", "Wn", "Wp", "", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
 estados.append(copy.deepcopy(m))
@@ -119,49 +119,51 @@ def torre(pi, pf ):
             print("El movimiento no es legal")
             return False
 def alfil(pi,pf):
-    diagonal = False
-    legal = True
-    mov1 = abs(pi[0] - pf[0])
-    mov2 = abs(pi[1] - pf[1])
-    if mov1 == mov2:
-        diagonal = True
     fila = pi[1]
-    if diagonal == True:
-        if pi[0] > pf[0]:
-            contador = -1
-        else:
-            contador = 1
-        if pi[1] > pf[1]:
-            contador2 = -1
-        else:
-            contador2 = 1
-        for a in range(pi[0] , pf[0], contador):
-            A = m[fila][a]
-            if A != "" and A != x:
-                legal = False
-                break
-            fila += contador2
-        if legal == False:
-            print("El movimiento no es legal")
-            return False
-        else:
-            if y == "" or y[0] != x[0]:
-                print("El movimiento es legal")
-                mover(pi, pf)
-                return True
-            else:
-                print("El movimiento no es legal")
-                return False
+    legal = True
+    if pi[0] > pf[0]:
+        contador = -1
     else:
+        contador = 1
+    if pi[1] > pf[1]:
+        contador2 = -1
+    else:
+        contador2 = 1
+    for a in range(pi[0] , pf[0], contador):
+        A = m[fila][a]
+        if A != "" and A != x:
+            legal = False
+            break
+        fila += contador2
+    if legal == False:
         print("El movimiento no es legal")
         return False
-
-
+    else:
+        if y == "" or y[0] != x[0]:
+            print("El movimiento es legal")
+            mover(pi, pf)
+            return True
+        else:
+            print("El movimiento no es legal")
+            return False
 def movimiento_legal(pi, pf):
     if x[1] == "r":
-        return torre(pi, pf )
+        return torre(pi, pf)
     elif x[1] == "b":
-        return alfil(pi , pf)
+        mov1 = abs(pi[0] - pf[0])
+        mov2 = abs(pi[1] - pf[1])
+        if mov1 == mov2:
+            return alfil(pi , pf)
+        else:
+            print("El movimiento no es legal")
+            return False
+    elif x[1] == "q":
+        mov1 = abs(pi[0] - pf[0])
+        mov2 = abs(pi[1] - pf[1])
+        if mov1 == mov2:
+            return alfil(pi, pf)
+        else:
+            torre(pi,pf)
     else:
         return mover(pi, pf)
 def canviarnumeros(X, Y):
