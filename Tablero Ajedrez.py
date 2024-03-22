@@ -3,12 +3,12 @@ from math import sqrt
 import copy
 #       a      b    c      d     e     f     g     h
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
-     ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
-     ["", "", "", "", "", "", "", ""],  # 6
+     ["", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
+     ["", "Wn", "", "", "", "", "", ""],  # 6
      ["", "", "", "", "", "", "", ""],  # 5
      ["", "", "", "", "", "", "", ""],  # 4
-     ["", "", "", "", "", "", "", ""],  # 3
-     ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
+     ["Bp", "", "Wp", "Wp", "", "", "", ""],  # 3
+     ["Wp", "Wp", "", "", "Wp", "Wp", "Wp", "Wp"],  # 2
      ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
@@ -148,19 +148,20 @@ def alfil(pi,pf):
             print("El movimiento no es legal")
             return False
 def Caballo(pi, pf):
-    print(pi)
-    print(pf)
     mov1  = pf[0] - pi[0]
     mov2 = pf[1] - pi[1]
-    mov = ((mov1**2) + (mov2 **2)) ** 0.5
-    print(mov1 , mov2)
-    print((mov1 * mov1) , (mov2 * mov2))
-    print((mov1 * mov1) + (mov2 * mov2))
-    print(mov)
-    if mov == 2.5 and pi[0] != pf[0] and pi[1] != pf[1]:
-        print("Legal")
+    mov = str((mov1**2) + (mov2 **2))
+    if mov == str(5) and pi[0] != pf[0] and pi[1] != pf[1]:
+        if y == "" or y[0] != x[0]:
+            print("El movimiento es legal")
+            mover(pi, pf)
+            return True
+        else:
+            print("El movimiento no es legal")
+            return False
     else:
         print("No legal")
+        return False
 def movimiento_legal(pi, pf):
     if x[1] == "r":
         return torre(pi, pf)
@@ -180,7 +181,7 @@ def movimiento_legal(pi, pf):
         else:
             torre(pi,pf)
     elif x[1] == "n":
-        Caballo(pi,pf)
+        return Caballo(pi,pf)
     else:
         return mover(pi, pf)
 def canviarnumeros(X, Y):
