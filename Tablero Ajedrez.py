@@ -3,12 +3,12 @@ from math import sqrt
 import copy
 #       a      b    c      d     e     f     g     h
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
-     ["", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
+     ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "Wn", "", "", "", "", "", ""],  # 6
      ["", "", "", "", "", "", "", ""],  # 5
      ["", "", "", "", "", "", "", ""],  # 4
-     ["Bp", "", "Wp", "Wp", "", "", "", ""],  # 3
-     ["Wp", "Wp", "", "", "Wp", "Wp", "Wp", "Wp"],  # 2
+     ["", "", "", "", "", "", "", ""],  # 3
+     ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
      ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
@@ -20,6 +20,7 @@ movimiento_n = 0
 letra = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6, "H": 7}
 numeros = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1, 8: 0}
 control = [0, 0, 0, 0, 0, 0]  # 1: WK 2: BK 3: WR1 4: WR2 5: BR1 6: BR2
+peonesblancos = [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]
 blancas = True
 def contarMovimientos(x):
     if x % 2 == 0:
@@ -112,13 +113,9 @@ def torre(pi, pf ):
         print("El movimiento no es legal")
         return False
     else:
-        if y == "" or y[0] != x[0]:
-            print("El movimiento es legal")
-            mover(pi, pf )
-            return True
-        else:
-            print("El movimiento no es legal")
-            return False
+        print("El movimiento es legal")
+        mover(pi, pf)
+        return True
 def alfil(pi,pf):
     fila = pi[1]
     legal = True
@@ -140,50 +137,85 @@ def alfil(pi,pf):
         print("El movimiento no es legal")
         return False
     else:
-        if y == "" or y[0] != x[0]:
-            print("El movimiento es legal")
-            mover(pi, pf)
-            return True
-        else:
-            print("El movimiento no es legal")
-            return False
+        print("El movimiento es legal")
+        mover(pi, pf)
+        return True
 def Caballo(pi, pf):
     mov1  = pf[0] - pi[0]
     mov2 = pf[1] - pi[1]
     mov = str((mov1**2) + (mov2 **2))
     if mov == str(5) and pi[0] != pf[0] and pi[1] != pf[1]:
-        if y == "" or y[0] != x[0]:
-            print("El movimiento es legal")
-            mover(pi, pf)
-            return True
-        else:
-            print("El movimiento no es legal")
-            return False
+        print("El movimiento es legal")
+        mover(pi, pf)
+        return True
     else:
-        print("No legal")
+        print("El movimiento no es legal")
         return False
-def movimiento_legal(pi, pf):
-    if x[1] == "r":
-        return torre(pi, pf)
-    elif x[1] == "b":
-        mov1 = abs(pi[0] - pf[0])
-        mov2 = abs(pi[1] - pf[1])
-        if mov1 == mov2:
-            return alfil(pi , pf)
-        else:
-            print("El movimiento no es legal")
-            return False
-    elif x[1] == "q":
-        mov1 = abs(pi[0] - pf[0])
-        mov2 = abs(pi[1] - pf[1])
-        if mov1 == mov2:
-            return alfil(pi, pf)
-        else:
-            torre(pi,pf)
-    elif x[1] == "n":
-        return Caballo(pi,pf)
+def Peon(pi,pf):
+    legal1 = True
+    if blancas == True:
+        numero = -1
+        numero2 = -2
     else:
-        return mover(pi, pf)
+        numero = 1
+        numero2 = 2
+    if peonesblancos[pi[0]] == 0:
+        if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0]:
+            print("Legal")
+            legal = True
+        else:
+            print("No legal")
+            legal = False
+    else:
+        if pi[1] + numero == pf[1] and pi[0] == pf[0]:
+            print("Legal")
+            legal = True
+        else:
+            print("No legal")
+            legal = False
+    if legal == True:
+        for a in range(pi[1], pf[1], numero):
+            A = m[a][pi[0]]
+            if A != "" and A != x:
+                legal1 = False
+                break
+    if legal1 == False:
+        print("El movimiento no es legal")
+        return False
+    else:
+        print("El movimiento es legal")
+        mover(pi, pf)
+        return True
+    peonesblancos[pi[0]] += 1
+def movimiento_legal(pi, pf):
+    if y == "" or y[0] != x[0]:
+        if x[1] == "r":
+            return torre(pi, pf)
+        elif x[1] == "b":
+            mov1 = abs(pi[0] - pf[0])
+            mov2 = abs(pi[1] - pf[1])
+            if mov1 == mov2:
+                return alfil(pi, pf)
+            else:
+                print("El movimiento no es legal")
+                return False
+        elif x[1] == "q":
+            mov1 = abs(pi[0] - pf[0])
+            mov2 = abs(pi[1] - pf[1])
+            if mov1 == mov2:
+                return alfil(pi, pf)
+            else:
+                return torre(pi, pf)
+        elif x[1] == "n":
+            return Caballo(pi, pf)
+        elif x[1] == "p":
+            return Peon(pi, pf)
+        else:
+            return mover(pi, pf)
+    else:
+        print("El movimiento no es legal")
+        return False
+
 def canviarnumeros(X, Y):
     X[0] = letra[str(X[0]).upper()]
     Y[0] = letra[str(Y[0]).upper()]
@@ -231,7 +263,9 @@ while palabra != "Exit":
             pi[1] = int(movimiento[1])
             pf[0] = str(movimiento[2])
             pf[1] = int(movimiento[3])
+            print(pi)
             canviarnumeros(pi, pf)
+            print(pi)
             x = m[pi[1]][pi[0]]
             y = m[pf[1]][pf[0]]
             blancas = comprobarMovimientos(x, blancas)
