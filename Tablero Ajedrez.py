@@ -3,9 +3,9 @@ from math import sqrt
 import copy
 #       a      b    c      d     e     f     g     h
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
-     ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
-     ["", "Wn", "", "", "", "", "", ""],  # 6
-     ["", "", "", "", "", "", "", ""],  # 5
+     ["", "", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
+     ["", "", "", "", "", "", "", ""],  # 6
+     ["Bp", "Bp", "", "", "", "", "", ""],  # 5
      ["", "", "", "", "", "", "", ""],  # 4
      ["", "", "", "", "", "", "", ""],  # 3
      ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
@@ -20,7 +20,8 @@ movimiento_n = 0
 letra = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6, "H": 7}
 numeros = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1, 8: 0}
 control = [0, 0, 0, 0, 0, 0]  # 1: WK 2: BK 3: WR1 4: WR2 5: BR1 6: BR2
-peonesblancos = [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]
+peonesBlancos = [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]
+peonesNegros = [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]
 blancas = True
 def contarMovimientos(x):
     if x % 2 == 0:
@@ -153,32 +154,60 @@ def Caballo(pi, pf):
         return False
 def Peon(pi,pf):
     legal1 = True
-    if blancas == True:
+    legal = True
+    if blancas == True: #Peones blancos
         numero = -1
         numero2 = -2
-    else:
+        if peonesBlancos[pi[0]] == 0:
+            if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0] and y == "":
+                print("Legal")
+                legal = True
+            else:
+                print("No legal")
+                legal = False
+        elif pi[0] != pf[0] and y[0] == "B":
+            if pi[0] + 1 == pf[0] and pi[1] + 1 == pf[1]:
+                print("pepe")
+                mover(pi , pf)
+        else:
+            if pi[1] + numero == pf[1] and pi[0] == pf[0] and y == "":
+                print("Legal")
+                legal = True
+            else:
+                print("No legal")
+                legal = False
+        peonesBlancos[pi[0]] += 1
+    else: #Peones negros
         numero = 1
         numero2 = 2
-    if peonesblancos[pi[0]] == 0:
-        if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0]:
-            print("Legal")
-            legal = True
+        if peonesNegros[pi[0]] == 0:
+            if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0] and y == "":
+                print("Legal")
+                legal = True
+            else:
+                print("No legal")
+                legal = False
+        elif pi[0] != pf[0] and y[0] == "W":
+            if pi[0] + 1 == pf[0] and pi[1] + 1 == pf[1]:
+                print("pepe")
+                mover(pi , pf)
         else:
-            print("No legal")
-            legal = False
-    else:
-        if pi[1] + numero == pf[1] and pi[0] == pf[0]:
-            print("Legal")
-            legal = True
-        else:
-            print("No legal")
-            legal = False
+            if pi[1] + numero == pf[1] and pi[0] == pf[0] and y == "":
+                print("Legal")
+                legal = True
+            else:
+                print("No legal")
+                legal = False
+        peonesNegros[pi[0]] += 1
+    
     if legal == True:
         for a in range(pi[1], pf[1], numero):
             A = m[a][pi[0]]
             if A != "" and A != x:
                 legal1 = False
                 break
+    else:
+        legal1 = False
     if legal1 == False:
         print("El movimiento no es legal")
         return False
@@ -186,7 +215,6 @@ def Peon(pi,pf):
         print("El movimiento es legal")
         mover(pi, pf)
         return True
-    peonesblancos[pi[0]] += 1
 def movimiento_legal(pi, pf):
     if y == "" or y[0] != x[0]:
         if x[1] == "r":
