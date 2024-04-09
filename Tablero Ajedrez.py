@@ -1,11 +1,12 @@
 from interfaz import RepresentaTablero
 from math import sqrt
 import copy
+
 #       a      b    c      d     e     f     g     h
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
-     ["", "", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
+     ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "", "", "", "", "", "", ""],  # 6
-     ["Bp", "Bp", "", "", "", "", "", ""],  # 5
+     ["", "", "", "", "", "", "", ""],  # 5
      ["", "", "", "", "", "", "", ""],  # 4
      ["", "", "", "", "", "", "", ""],  # 3
      ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
@@ -20,14 +21,16 @@ movimiento_n = 0
 letra = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6, "H": 7}
 numeros = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1, 8: 0}
 control = [0, 0, 0, 0, 0, 0]  # 1: WK 2: BK 3: WR1 4: WR2 5: BR1 6: BR2
-peonesBlancos = [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]
-peonesNegros = [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]
 blancas = True
+
+
 def contarMovimientos(x):
     if x % 2 == 0:
         print("Mueve el blanco")
     else:
         print("Mueve el negro")
+
+
 def comprobarMovimientos(x, y):
     if x[0] == "W":
         y = True
@@ -46,6 +49,8 @@ def comprobarMovimientos(x, y):
         elif x == "Br2":
             control[5] += 1
     return y
+
+
 def enroque(x):
     a = 1
     if movimiento_n % 2 == 0:
@@ -85,7 +90,9 @@ def enroque(x):
     if a != 0:
         print("No se puede realizar el enroque")
         return False
-def torre(pi, pf ):
+
+
+def torre(pi, pf):
     legal = True
     if pi[0] == pf[0]:
         if pi[1] > pf[1]:
@@ -117,7 +124,9 @@ def torre(pi, pf ):
         print("El movimiento es legal")
         mover(pi, pf)
         return True
-def alfil(pi,pf):
+
+
+def alfil(pi, pf):
     fila = pi[1]
     legal = True
     if pi[0] > pf[0]:
@@ -128,7 +137,7 @@ def alfil(pi,pf):
         contador2 = -1
     else:
         contador2 = 1
-    for a in range(pi[0] , pf[0], contador):
+    for a in range(pi[0], pf[0], contador):
         A = m[fila][a]
         if A != "" and A != x:
             legal = False
@@ -141,10 +150,12 @@ def alfil(pi,pf):
         print("El movimiento es legal")
         mover(pi, pf)
         return True
+
+
 def Caballo(pi, pf):
-    mov1  = pf[0] - pi[0]
+    mov1 = pf[0] - pi[0]
     mov2 = pf[1] - pi[1]
-    mov = str((mov1**2) + (mov2 **2))
+    mov = str((mov1 ** 2) + (mov2 ** 2))
     if mov == str(5) and pi[0] != pf[0] and pi[1] != pf[1]:
         print("El movimiento es legal")
         mover(pi, pf)
@@ -152,54 +163,33 @@ def Caballo(pi, pf):
     else:
         print("El movimiento no es legal")
         return False
-def Peon(pi,pf):
+
+    #abs(pf[0] - pi[0]) == 2 and abs(pf[1] - pi[1]) == 1
+    #abs(pf[0] - pi[0]) == 1 and abs(pf[1] - pi[1]) == 2
+
+def Peon(pi, pf):
     legal1 = True
     legal = True
-    if blancas == True: #Peones blancos
+    if blancas == True:  
         numero = -1
         numero2 = -2
-        if peonesBlancos[pi[0]] == 0:
-            if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0] and y == "":
-                print("Legal")
-                legal = True
-            else:
-                print("No legal")
-                legal = False
-        elif pi[0] != pf[0] and y[0] == "B":
-            if pi[0] + 1 == pf[0] and pi[1] + 1 == pf[1]:
-                print("pepe")
-                mover(pi , pf)
-        else:
-            if pi[1] + numero == pf[1] and pi[0] == pf[0] and y == "":
-                print("Legal")
-                legal = True
-            else:
-                print("No legal")
-                legal = False
-        peonesBlancos[pi[0]] += 1
-    else: #Peones negros
+    else:
         numero = 1
         numero2 = 2
-        if peonesNegros[pi[0]] == 0:
-            if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0] and y == "":
-                print("Legal")
-                legal = True
-            else:
-                print("No legal")
-                legal = False
-        elif pi[0] != pf[0] and y[0] == "W":
-            if pi[0] + 1 == pf[0] and pi[1] + 1 == pf[1]:
-                print("pepe")
-                mover(pi , pf)
+    if pi[1] == 1 or pi[1] == 6: #Movimiento 2 casillas peon
+        if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0] and y == "":
+            legal = True
         else:
-            if pi[1] + numero == pf[1] and pi[0] == pf[0] and y == "":
-                print("Legal")
-                legal = True
-            else:
-                print("No legal")
-                legal = False
-        peonesNegros[pi[0]] += 1
-    
+            legal = False
+    elif pi[0] != pf[0] and y[0] != x[0]:  #Peon mata
+        if pi[0] + numero == pf[0] and pi[1] + numero == pf[1]:
+            mover(pi, pf)
+    else: #Movimiento 1 casilla peon
+        if pi[1] + numero == pf[1] and pi[0] == pf[0] and y == "":
+            legal = True
+        else:
+            legal = False
+
     if legal == True:
         for a in range(pi[1], pf[1], numero):
             A = m[a][pi[0]]
@@ -215,6 +205,8 @@ def Peon(pi,pf):
         print("El movimiento es legal")
         mover(pi, pf)
         return True
+
+
 def movimiento_legal(pi, pf):
     if y == "" or y[0] != x[0]:
         if x[1] == "r":
@@ -244,15 +236,20 @@ def movimiento_legal(pi, pf):
         print("El movimiento no es legal")
         return False
 
+
 def canviarnumeros(X, Y):
     X[0] = letra[str(X[0]).upper()]
     Y[0] = letra[str(Y[0]).upper()]
     X[1] = numeros[int(X[1])]
     Y[1] = numeros[int(Y[1])]
     return (X, Y)
+
+
 def mostrarestado(estado):
     for i in estado:
         print(i)
+
+
 def mover(pi, pf):
     if movimiento_n % 2 == 0:
         if blancas == True:
@@ -274,6 +271,8 @@ def mover(pi, pf):
         else:
             print("Debes mover una pieza negra")
             return False
+
+
 while palabra != "Exit":
     palabra = input("Quieres decir una posicion?")
     if palabra.lower() == "exit":
@@ -291,9 +290,7 @@ while palabra != "Exit":
             pi[1] = int(movimiento[1])
             pf[0] = str(movimiento[2])
             pf[1] = int(movimiento[3])
-            print(pi)
             canviarnumeros(pi, pf)
-            print(pi)
             x = m[pi[1]][pi[0]]
             y = m[pf[1]][pf[0]]
             blancas = comprobarMovimientos(x, blancas)
