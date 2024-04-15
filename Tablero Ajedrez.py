@@ -3,13 +3,13 @@ from math import sqrt
 import copy
 
 #       a      b    c      d     e     f     g     h
-m = [["Br1", "", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
-     ["", "Wp", "", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
+m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
+     ["", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "", "", "", "", "", "", ""],  # 6
      ["", "", "", "", "", "", "", ""],  # 5
-     ["Bp", "", "Bn", "", "", "Wp", "", ""],  # 4
-     ["", "Wp", "", "", "", "", "", ""],  # 3
-     ["Bp", "", "Bp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
+     ["Bp", "", "", "", "", "", "", ""],  # 4
+     ["", "", "", "", "", "", "", ""],  # 3
+     ["v", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
      ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
@@ -181,18 +181,11 @@ def Peon(pi, pf,x,y):
             legal = True
         else:
             legal = False
-    elif (pi[0] + 1 == pf[0] or pi[0] - 1 == pf[0]) and pi[1]  + numero == pf[1]:  #Peon mata
-        print(numero)
-        print(pi)
-        print(pf)
-        print(pf[0])
-        print(pi[0] + 1)
-        print(pi[0] - 1)
-        print(pi[1]  + numero)
-        print(pi[1]  + numero == pf[1])
-        print(pi[0] + 1 == pf[0] or pi[0] - 1 == pf[0])
-        print((pi[0] + 1 == pf[0] or pi[1] - 1 == pf[1]) and pi[1]  + numero == pf[1])
-        mover(pi, pf)
+    elif pi[0] != pf[0]:  #Peon mata
+        if (pi[0] + 1 == pf[0] or pi[0] - 1 == pf[0]) and pi[1]  + numero == pf[1]:
+            legal1 = True
+        else:
+            legal1 = False
     else: #Movimiento 1 casilla peon
         if pi[1] + numero == pf[1] and pi[0] == pf[0] and y == "":
             legal = True
