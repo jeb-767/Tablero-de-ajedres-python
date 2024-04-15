@@ -3,13 +3,13 @@ from math import sqrt
 import copy
 
 #       a      b    c      d     e     f     g     h
-m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
-     ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
+m = [["Br1", "", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
+     ["", "Wp", "", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "", "", "", "", "", "", ""],  # 6
      ["", "", "", "", "", "", "", ""],  # 5
-     ["", "", "", "", "", "", "", ""],  # 4
-     ["", "", "", "", "", "", "", ""],  # 3
-     ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
+     ["Bp", "", "Bn", "", "", "Wp", "", ""],  # 4
+     ["", "Wp", "", "", "", "", "", ""],  # 3
+     ["Bp", "", "Bp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
      ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
@@ -167,10 +167,10 @@ def Caballo(pi, pf):
     #abs(pf[0] - pi[0]) == 2 and abs(pf[1] - pi[1]) == 1
     #abs(pf[0] - pi[0]) == 1 and abs(pf[1] - pi[1]) == 2
 
-def Peon(pi, pf):
-    legal1 = True
+def Peon(pi, pf,x,y):
     legal = True
-    if blancas == True:  
+    legal1 = True
+    if blancas == True:
         numero = -1
         numero2 = -2
     else:
@@ -181,9 +181,18 @@ def Peon(pi, pf):
             legal = True
         else:
             legal = False
-    elif pi[0] != pf[0] and y[0] != x[0]:  #Peon mata
-        if pi[0] + numero == pf[0] and pi[1] + numero == pf[1]:
-            mover(pi, pf)
+    elif (pi[0] + 1 == pf[0] or pi[0] - 1 == pf[0]) and pi[1]  + numero == pf[1]:  #Peon mata
+        print(numero)
+        print(pi)
+        print(pf)
+        print(pf[0])
+        print(pi[0] + 1)
+        print(pi[0] - 1)
+        print(pi[1]  + numero)
+        print(pi[1]  + numero == pf[1])
+        print(pi[0] + 1 == pf[0] or pi[0] - 1 == pf[0])
+        print((pi[0] + 1 == pf[0] or pi[1] - 1 == pf[1]) and pi[1]  + numero == pf[1])
+        mover(pi, pf)
     else: #Movimiento 1 casilla peon
         if pi[1] + numero == pf[1] and pi[0] == pf[0] and y == "":
             legal = True
@@ -203,11 +212,37 @@ def Peon(pi, pf):
         return False
     else:
         print("El movimiento es legal")
-        mover(pi, pf)
+        if blancas == True and pf[1] == 0 :
+            canvio = True
+            color = "W"
+            canvioPeon = input("Por que pieza quieres canviar el peon: Reina, Caballo, Alfil o Torre").lower()
+        elif blancas == False and pf[1] == 7 :
+            canvio = True
+            color = "B"
+            canvioPeon = input("Por que pieza quieres canviar el peon: Reina, Caballo, Alfil o Torre").lower()
+        else:
+            canvio = False
+        if canvio == True:
+            if canvioPeon == "reina":
+                m[pf[1]][pf[0]] = color + "q"
+                m[pi[1]][pi[0]] = ""
+            elif canvioPeon == "caballo":
+                m[pf[1]][pf[0]] = color + "n"
+                m[pi[1]][pi[0]] = ""
+            elif canvioPeon == "caballo":
+                m[pf[1]][pf[0]] = color + "b"
+                m[pi[1]][pi[0]] = ""
+            elif canvioPeon == "caballo":
+                m[pf[1]][pf[0]] = color + "r"
+                m[pi[1]][pi[0]] = ""
+            mostrarestado(m)
+        else:
+            mover(pi, pf)
         return True
 
 
-def movimiento_legal(pi, pf):
+
+def movimiento_legal(pi, pf,x,y):
     if y == "" or y[0] != x[0]:
         if x[1] == "r":
             return torre(pi, pf)
@@ -229,7 +264,7 @@ def movimiento_legal(pi, pf):
         elif x[1] == "n":
             return Caballo(pi, pf)
         elif x[1] == "p":
-            return Peon(pi, pf)
+            return Peon(pi, pf,x,y)
         else:
             return mover(pi, pf)
     else:
@@ -294,7 +329,7 @@ while palabra != "Exit":
             x = m[pi[1]][pi[0]]
             y = m[pf[1]][pf[0]]
             blancas = comprobarMovimientos(x, blancas)
-            legal = movimiento_legal(pi, pf)
+            legal = movimiento_legal(pi, pf,x,y)
             tablero.actualiza(m)
         elif len(movimiento) == 1:
             legal = enroque(movimiento)
