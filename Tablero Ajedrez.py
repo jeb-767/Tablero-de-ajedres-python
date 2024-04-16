@@ -4,12 +4,12 @@ import copy
 
 #       a      b    c      d     e     f     g     h
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
-     ["", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
+     ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "", "", "", "", "", "", ""],  # 6
      ["", "", "", "", "", "", "", ""],  # 5
-     ["Bp", "", "", "", "", "", "", ""],  # 4
+     ["", "", "", "", "", "", "", ""],  # 4
      ["", "", "", "", "", "", "", ""],  # 3
-     ["v", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
+     ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
      ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
@@ -177,17 +177,17 @@ def Peon(pi, pf,x,y):
         numero = 1
         numero2 = 2
     if pi[1] == 1 or pi[1] == 6: #Movimiento 2 casillas peon
-        if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0] and y == "":
+        if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0]:
             legal = True
         else:
             legal = False
-    elif pi[0] != pf[0]:  #Peon mata
-        if (pi[0] + 1 == pf[0] or pi[0] - 1 == pf[0]) and pi[1]  + numero == pf[1]:
+    elif pi[0] != pf[0]: #Peon mata
+        if ((pi[0] + 1 == pf[0] or pi[0] - 1 == pf[0]) and pi[1]  + numero == pf[1]) and y != "":
             legal1 = True
         else:
             legal1 = False
     else: #Movimiento 1 casilla peon
-        if pi[1] + numero == pf[1] and pi[0] == pf[0] and y == "":
+        if pi[1] + numero == pf[1] and pi[0] == pf[0]:
             legal = True
         else:
             legal = False
@@ -205,6 +205,7 @@ def Peon(pi, pf,x,y):
         return False
     else:
         print("El movimiento es legal")
+        piezas = {"reina" : "q" , "caballo" : "n" , "alfil" : "b" , "torre" : "r1"}
         if blancas == True and pf[1] == 0 :
             canvio = True
             color = "W"
@@ -216,18 +217,8 @@ def Peon(pi, pf,x,y):
         else:
             canvio = False
         if canvio == True:
-            if canvioPeon == "reina":
-                m[pf[1]][pf[0]] = color + "q"
-                m[pi[1]][pi[0]] = ""
-            elif canvioPeon == "caballo":
-                m[pf[1]][pf[0]] = color + "n"
-                m[pi[1]][pi[0]] = ""
-            elif canvioPeon == "caballo":
-                m[pf[1]][pf[0]] = color + "b"
-                m[pi[1]][pi[0]] = ""
-            elif canvioPeon == "caballo":
-                m[pf[1]][pf[0]] = color + "r"
-                m[pi[1]][pi[0]] = ""
+            m[pf[1]][pf[0]] = color + piezas[canvioPeon]
+            m[pi[1]][pi[0]] = ""
             mostrarestado(m)
         else:
             mover(pi, pf)
