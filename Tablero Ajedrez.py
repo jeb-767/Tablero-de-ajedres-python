@@ -4,12 +4,12 @@ import copy
 
 #       a      b    c      d     e     f     g     h
 m = [["Br1", "Bn", "Bb", "Bq", "Bk", "Bb", "Bn", "Br2"],  # 8
-     ["Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
+     ["", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp", "Bp"],  # 7
      ["", "", "", "", "", "", "", ""],  # 6
      ["", "", "", "", "", "", "", ""],  # 5
-     ["", "", "", "", "", "", "", ""],  # 4
-     ["", "", "", "", "", "", "", ""],  # 3
-     ["Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp", "Wp"],  # 2
+     ["Bp", "", "Bp", "", "", "", "", ""],  # 4
+     ["", "", "", "", "", "", "Wp", ""],  # 3
+     ["Wp", "Wp", "Wp", "", "Wp", "Wp", "Wp", "Wp"],  # 2
      ["Wr1", "Wn", "Wb", "Wq", "Wk", "Wb", "Wn", "Wr2"]]  # 1
 estados = [[]]
 tablero = RepresentaTablero(m)
@@ -173,12 +173,28 @@ def Peon(pi, pf,x,y):
     if blancas == True:
         numero = -1
         numero2 = -2
+        color = "B"
     else:
         numero = 1
         numero2 = 2
+        color = "W"
     if pi[1] == 1 or pi[1] == 6: #Movimiento 2 casillas peon
-        if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0]:
-            legal = True
+        if (pi[1] + numero2 == pf[1] or pi[1] + numero == pf[1]) and pi[0] == pf[0] and y == "":
+            if m[pf[1]][pf[0] + 1] == color + "p" :
+                m[pi[1] + numero][pi[0]] = color + "p"
+                m[pi[1]][pi[0]] = ""
+                m[pf[1]][pf[0] + 1] = ""
+
+                mostrarestado(m)
+                return True
+            elif m[pf[1]][pf[0] - 1] == color + "p":
+                m[pi[1] + numero][pi[0]] = color + "p"
+                m[pi[1]][pi[0]] = ""
+                m[pf[1]][pf[0] - 1] = ""
+                mostrarestado(m)
+                return True
+            else:
+                legal = True
         else:
             legal = False
     elif pi[0] != pf[0]: #Peon mata
@@ -208,11 +224,9 @@ def Peon(pi, pf,x,y):
         piezas = {"reina" : "q" , "caballo" : "n" , "alfil" : "b" , "torre" : "r1"}
         if blancas == True and pf[1] == 0 :
             canvio = True
-            color = "W"
             canvioPeon = input("Por que pieza quieres canviar el peon: Reina, Caballo, Alfil o Torre").lower()
         elif blancas == False and pf[1] == 7 :
             canvio = True
-            color = "B"
             canvioPeon = input("Por que pieza quieres canviar el peon: Reina, Caballo, Alfil o Torre").lower()
         else:
             canvio = False
