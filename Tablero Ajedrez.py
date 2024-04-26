@@ -339,3 +339,154 @@ def movimiento_externo():
     return jsonify(resultado = m)
 
 app.run(debug=True)
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajedrez</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    img {
+      max-width: 90%;
+      max-height: 90%;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(8, 50px);
+      grid-template-rows: repeat(8, 50px);
+    }
+    .square {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+    }
+    .white {
+      background-color: #f0d9b5;
+    }
+    .black {
+      background-color: #b58863;
+      color: white;
+    }
+    .selected {
+      background-color: #FFA36E;
+    }
+  </style>
+</head>
+<body>
+  <div class="board" id="chessBoard">
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const board = document.getElementById("chessBoard");
+      let isWhite = true;
+      let selectedSquare = null;
+      const chessArrayText = `[['Br', 'Bn', 'Bb', 'Bq', 'Bk', 'Bb', 'Bn', 'Br'], ['Bp', 'Bp', 'Bp', 'Bp', 'Bp', 'Bp', 'Bp', 'Bp'], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['Wp', 'Wp', 'Wp', 'Wp', 'Wp', 'Wp', 'Wp', 'Wp'], ['Wr', 'Wn', 'Wb', 'Wq', 'Wk', 'Wb', 'Wn', 'Wr']]
+      `;
+
+
+      function convertToValidJSON(chessArrayText) {
+        const trimmedText = chessArrayText.trim().slice(1, -1);
+        const doubleQuotedText = trimmedText.replace(/'/g, '"');
+        return `[${doubleQuotedText}]`;
+      }
+
+      function parseChessArray(chessArrayText) {
+        return JSON.parse(convertToValidJSON(chessArrayText));
+      }
+
+      function updateChessBoard(chessArray) {
+        board.innerHTML = '';
+
+        for (let row = 0; row < chessArray.length; row++) {
+          for (let col = 0; col < chessArray[row].length; col++) {
+            const square = document.createElement("div");
+            square.className = `square ${isWhite ? "white" : "black"}`;
+            if(chessArray[row][col]!=""){
+              const pieceImage = document.createElement("img");
+              pieceImage.src = `img/${chessArray[row][col]}.png`;
+              pieceImage.alt = chessArray[row][col];
+              square.appendChild(pieceImage);
+            } else {
+              square.textContent = ''; 
+            }
+
+            square.addEventListener("click", function() {
+              const pieceOnSquare = square.querySelector("img");
+              var datos = {
+                movimiento: ""
+              };
+
+              if (pieceOnSquare && !selectedSquare) {
+                selectedSquare = square;
+                square.classList.add("selected");
+              } else if (selectedSquare && (square === selectedSquare)) {
+                selectedSquare.classList.remove("selected");
+                selectedSquare = null;
+              } else if (selectedSquare) {
+				const selectedRow = 8 - Math.floor([...selectedSquare.parentElement.children].indexOf(selectedSquare) / 8);
+				const selectedCol = String.fromCharCode(97 + ([...selectedSquare.parentElement.children].indexOf(selectedSquare) % 8));
+				const clickedRow = 8 - Math.floor([...board.children].indexOf(square) / 8);
+				const clickedCol = String.fromCharCode(97 + ([...board.children].indexOf(square) % 8));
+
+
+                const movimiento = `${selectedCol}${selectedRow}${clickedCol}${clickedRow}`;
+                datos.movimiento = movimiento;
+
+                // Llamada a Python
+                fetch('http://127.0.0.1:5000/movimiento_externo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(datos)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    updateChessBoard(data.resultado);
+					lastChessArray=data.resultado;
+                })
+                .catch(error => console.error('Error:', error));
+
+                const pieceToMove = selectedSquare.querySelector("img");
+                square.innerHTML = '';
+                square.appendChild(pieceToMove);
+                selectedSquare.classList.remove("selected");
+                selectedSquare = null;
+              }
+            });
+
+            board.appendChild(square);
+            isWhite = !isWhite;
+          }
+          isWhite = !isWhite; 
+        }
+      }
+
+      updateChessBoard(parseChessArray(chessArrayText));
+	  
+
+    });
+
+  </script>
+</body>
+</html>
